@@ -66,10 +66,6 @@ td {
   text-align: center;
 }
 
-.gameboard {
-  text-align: center;
-}
-
 /* -- No longer used --*/
 .dashboard {
   /*background: blue;*/
@@ -124,11 +120,11 @@ td {
 }
 
 /* These left: settings on the ships are for the starting location of the ships to look nice in a row prior to placing them on the board */
-.aircraftCarrier { left: 240px;}
-.battleship { left: 370px;}
-.destroyer { left: 475px;}
-.submarine { left: 555px;}
-.ptBoat { left: 635px;}
+.aircraftCarrier { left: 100px;}
+.battleship { left: 230px;}
+.destroyer { left: 335px;}
+.submarine { left: 415px;}
+.ptBoat { left: 495px;}
 
 /* -- Ships for droppable and stay on top --*/
 .aircraftCarrier,
@@ -139,7 +135,7 @@ td {
 .dashboardTitle {
   position: absolute;
   z-index: 100;
-  /*top: 8px;*/
+  top: 118px;
 }
 
 /*.aircraftCarrier {
@@ -197,20 +193,14 @@ img.droppable { /* this was attempt at making the img element one grid HxW but l
 
 
 /* -- IDs --*/
-
-#readyToPlay {
-  position: relative;
-  top: -10px;
+#gameWrapper {
+  /*margin: 0px auto;*/
+  z-index: -100;
 }
 
 #placeShipsWrapper span {
   border: 0;
   background-color: transparent;
-}
-
-#playerBoard,
-#opponentBoard {
-  position: relative;
 }
 
 #draggableAircraftCarrier,
@@ -223,7 +213,13 @@ img.droppable { /* this was attempt at making the img element one grid HxW but l
   height: 25px;
 }
 
-#gameWrapper {
-  margin: 0px auto;
-  z-index: -100;
+#playerBoard,
+#opponentBoard {
+  position: relative;
+}
+
+#readyToPlay {
+  position: absolute;
+  left: -90px;
+  top: 30px;
 }

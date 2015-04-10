@@ -52,45 +52,33 @@ var socket = io(),
   $("#readyToPlay").css("visibility","visible");
   $("#placeShips").css("visibility","visible");
 
+  $('#playerSignIn').modal('show'); // shows the get player's name modal
+
   $('#playerSignIn').on('shown.bs.modal', function () {
       $('#personsName').focus();
-        console.log("focus on the Player sign in modal");
   });
 
   // as the user types, populate the client side "Hello xyz" but wait for the sumbit to sent the info to redis
-  // gameObj.playerName = $( "#personsName" ).keyup(function() { // #personsName is the id of the name input field in the modal
-  /*var playerName = */
   $( "#personsName" ).keyup(function() { // #personsName is the id of the name input field in the modal
-      gameObj.playerName = $('#personsName').val();  // var playerName = $('#personsName').val();
-      $( "#userName" ).text( "Hello " + /* playerName */ gameObj.playerName );
+      gameObj.playerName = $('#personsName').val();
+      $( "#userName" ).text( "Hello " + gameObj.playerName );
   }).keyup();
 
   // listener for the form submit
   $('form').submit(function(e){
     e.preventDefault();
-    var playerName = document.getElementsByTagName("input")[0].value; // wasn't working using same code from above function like like 10 (  var playerName = $('#personsName').val();  )
+    var playerName = document.getElementsByTagName("input")[0].value; // wasn't working using same code from above function (  var playerName = $('#personsName').val();  )
 
-    $('#playerSignIn').modal('hide'); // shows the get player's name modal
-    console.log("playerName", /* playerName */ gameObj.playerName );
+    $('#playerSignIn').modal('hide'); // hides the modal
+    socket.emit('playerName', gameObj.playerName );
 
-    socket.emit('playerName', /* playerName */ gameObj.playerName );
-
-
-
-    return /* playerName */ gameObj.playerName;
+    return gameObj.playerName;
     // HOW DO WE WANT TO DO THIS???? Many scenarios!!!
     // 1) Player already connected to the game and refreshed.
     // 2) Player started a new game (using a different player name)
     // 3) New player but their entered name already exists with another player. I think the socet ID needs to be the "PK" of the player's data
 
   }); // END listener for the form submit
-
-
-// *******************UN-COMMENT ONCE DONE WITH TESTING**************************
-//TEMPORARY DISABLE SINCE IT'S SO ANNOYING WHILE TESTING
-  var isNameEmpty = function(a){
-    $('#playerSignIn').modal('show'); // shows the get player's name modal
-  }();
 
   function gamePlay(){
 
@@ -100,14 +88,14 @@ var socket = io(),
     socket.on('turn', function(controller){ 
       if (controller===true){
         //jquery magic to allow clickable spaces, shoudl be off by default
-        console.log("Controller is TRUE");
+console.log("Controller is TRUE");
         isTrue = true;
         $(".opponent").prop('disabled', false);
       }
 
       if(controller===false){
         //jquery magic to not allow client to click on squares
-        console.log("Controller is FALSE");
+console.log("Controller is FALSE");
         isTrue = false;
         $(".opponent").prop('disabled', true);
       }
@@ -585,13 +573,15 @@ console.log("new theShipStyle", theShipStyle);
 
 
   function shipsPlaced () {
-    if ((gameObj.AircraftCarrier.cell !== undefined) &&
-        (gameObj.Battleship.cell !== undefined) &&
-        (gameObj.Destroyer.cell !== undefined) &&
-        (gameObj.Submarine.cell !== undefined) &&
-        (gameObj.PtBoat.cell !== undefined))
+    if ((gameObj.AircraftCarrier.cell !== "") &&
+        (gameObj.Battleship.cell !== "") &&
+        (gameObj.Destroyer.cell !== "") &&
+        (gameObj.Submarine.cell !== "") &&
+        (gameObj.PtBoat.cell !== ""))
     {
-      return true;  
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -599,17 +589,18 @@ console.log("new theShipStyle", theShipStyle);
     'click': function() {
       if (shipsPlaced()) {
         event.preventDefault();
-
-        // disable droppable
         $('#shotPlayer').text("Game ON!");
-        gameReady(true);
-        // emit to server player is ready
+
         $("#readyToPlay").css("display","none");  
         $('h4').text(''); 
-      }
-      else {
 
-        console.log("should prompt user");
+        // disable droppable
+        gameReady(true);
+
+        // emit to server player is ready
+      } else {
+        // prompt the user to place their ships on the grid
+        $('#shotPlayer').text("Place your ships on the grid.");
       }
 
     }

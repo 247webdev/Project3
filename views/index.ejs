@@ -43,8 +43,7 @@
     </div>
   </nav>
 <div class="row">
-  <div class="col-xs-8 col-xs-offset-2 text-center">
-    
+  <div class="col-xs-9 col-xs-offset-1 text-center">
 
   <!-- Christian added modal for getting player's name -->
   <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="false"  id="playerSignIn">
@@ -63,57 +62,28 @@
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 
-  <h2 id="userName">Player Name</h2>
-  <h2 id="shotPlayer"></h2>
-  <!--Use these Bootstrap helper classes (text or background) for the game notifications
-      class="text-muted"     text is grey
-      class="text-primary"   text is blue
-      class="text-success"   text is green
-      class="text-info"      text is dark blue
-      class="text-warning"   text is orange
-      class="text-danger"    text is red
 
-      class="bg-primary"     BG is dark blue, white text
-      class="bg-success"     BG is mint green, white black
-      class="bg-info"        BG is light blue, white black
-      class="bg-warning"     BG is light yellow, white black
-      class="bg-danger"      BG is red, white black
-  -->
-
-  <button id="readyToPlay" class="btn btn-success" value="Ready To Play">Ready To Play</button> 
-
-
-  <div class="gameboard">
+  <div id="gameWrapper">
     <span id="placeShipsWrapper">
-      <h4>Place your ships by dragging them to the left grid.<br>Double click a ship to rotate it 90 degrees.</h4><br>
       <span id="draggableAircraftCarrier" class="ui-widget-content draggableAircraftCarrier aircraftCarrier ship" >
         <img src="/images/wholeCarrier.png" alt="Drag your Aircraft Carrier to 'Your Ships' Grid">
       </span>
-
       <span id="draggableBattleship" class="ui-widget-content draggableBattleship battleship ship" >
         <img src="/images/wholeBattleship.png" alt="Drag your Battleship to 'Your Ships' Grid">
       </span>
-
       <span id="draggableDestroyer" class="ui-widget-content draggableDestroyer destroyer ship" >
         <img src="/images/wholeCruiser.png" alt="Drag your destroyer to 'Your Ships' Grid">
       </span>
-
       <span id="draggableSubmarine" class="ui-widget-content draggableSubmarine submarine ship" >
         <img src="/images/wholeSub.png" alt="Drag your submarine to 'Your Ships' Grid">
       </span>
-
       <span id="draggablePtBoat" class="ui-widget-content draggablePtBoat ptBoat ship" >
         <img src="/images/wholePatrol.png" alt="Drag your patrol boat to 'Your Ships' Grid">
       </span>
-
-      <br><br><br>
-
     </span> <!-- END #placeShipsWrapper -->
 
-  </div> <!-- end game board -->
-
-  <div id="gameWrapper">
     <div id="playerBoard">
+      <button id="readyToPlay" class="btn btn-success" value="Ready To Play">Ready To Play</button> 
       <table class="headerTop">
         <tr><th colspan="11"><center>Your Ships</th></tr>
         <tr>
@@ -1020,6 +990,28 @@
         </tr>
       </table>
     </div>
+    <br><br>
+    <div>
+      <h2 id="userName"></h2>
+      <h2 id="shotPlayer"></h2>
+      <h4>Place your ships by dragging them to the left grid. Double click a ship to rotate it 90 degrees.<br>When all of your ships are placed, click the "Ready To Play" button to start the game.</h4>
+      <!--Use these Bootstrap helper classes (text or background) for the game notifications
+          class="text-muted"     text is grey
+          class="text-primary"   text is blue
+          class="text-success"   text is green
+          class="text-info"      text is dark blue
+          class="text-warning"   text is orange
+          class="text-danger"    text is red
+
+          class="bg-primary"     BG is dark blue, white text
+          class="bg-success"     BG is mint green, white black
+          class="bg-info"        BG is light blue, white black
+          class="bg-warning"     BG is light yellow, white black
+          class="bg-danger"      BG is red, white black
+      -->
+    </div>
+
+
   </div>
 
     </div>
