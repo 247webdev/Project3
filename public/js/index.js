@@ -61,32 +61,33 @@ var socket = io(),
   // as the user types, populate the client side "Hello xyz" but wait for the sumbit to sent the info to redis
   $( "#personsName" ).keyup(function() { // #personsName is the id of the name input field in the modal
       gameObj.playerName = $('#personsName').val();
-      $( "#userName" ).text( "Hello " + gameObj.playerName );
+      $( "#userName" ).text( "Hello " + gameObj.playerName + ", place your ships!");
   }).keyup();
 
   // listener for the form submit
   $('form').submit(function(e){
     e.preventDefault();
-    var playerName = document.getElementsByTagName("input")[0].value; // wasn't working using same code from above function (  var playerName = $('#personsName').val();  )
 
+    var playerName = document.getElementsByTagName("input")[0].value; // wasn't working using same code from above function like like 10 (  var playerName = $('#personsName').val();  )
     $('#playerSignIn').modal('hide'); // hides the modal
+console.log("playerName", gameObj.playerName );
     socket.emit('playerName', gameObj.playerName );
-
     return gameObj.playerName;
-    // HOW DO WE WANT TO DO THIS???? Many scenarios!!!
-    // 1) Player already connected to the game and refreshed.
-    // 2) Player started a new game (using a different player name)
-    // 3) New player but their entered name already exists with another player. I think the socet ID needs to be the "PK" of the player's data
-
   }); // END listener for the form submit
+
+  var isNameEmpty = function(a){
+    $('#playerSignIn').modal('show'); // shows the get player's name modal
+  }();
 
   function gamePlay(){
 
     var selectedArr = selectedArr || []; // array of all shots
-    var isTrue;
+    var controllerIsTrue;
 
+    // catch turn controller and set controllerIsTrue
     socket.on('turn', function(controller){ 
       if (controller===true){
+<<<<<<< HEAD
         //jquery magic to allow clickable spaces, shoudl be off by default
 console.log("Controller is TRUE");
         isTrue = true;
@@ -98,56 +99,60 @@ console.log("Controller is TRUE");
 console.log("Controller is FALSE");
         isTrue = false;
         $(".opponent").prop('disabled', true);
+=======
+        console.log("Controller is TRUE");
+        controllerIsTrue = true;
+      } else if (controller===false){
+        console.log("Controller is FALSE");
+        controllerIsTrue = false;
+>>>>>>> 5657c4055903cdcb94c11960d3da24acc039d416
       }
     });
 
-      // color change on hover
-      $("td").mouseover(function(){
-        var cellState = $(this).data("state");
-        var cellId = $(this).data("id");
-        var cellTable = $(this).closest("table").attr("class");
-        if (isTrue){
-          if (cellId !== "header" && cellState === "unselected" && cellTable === "opponent") {
-            $(this).css("background-color", "red");
-          }
+    // color change on hover
+    $("td").mouseover(function(){
+      var cellState = $(this).data("state");
+      var cellId = $(this).data("id");
+      var cellTable = $(this).closest("table").attr("class");
+      if (controllerIsTrue){
+        if (cellId !== "header" && cellState === "unselected" && cellTable === "opponent") {
+          $(this).css("background-color", "red");
         }
-      });  // end of color change on hover
+      }
+    });  // end of color change on hover
 
-      // revert color if not clicked
-      $("td").mouseleave(function(){
-        var cellState = $(this).data("state");
-        var cellTable = $(this).closest("table").attr("class");
-        if (isTrue){
-          if (cellState === "unselected" && cellTable === "opponent") {
-            $(this).css("background-color", "lightyellow");  // if not selected change color back
-          }
+    // revert color if not clicked
+    $("td").mouseleave(function(){
+      var cellState = $(this).data("state");
+      var cellTable = $(this).closest("table").attr("class");
+      if (controllerIsTrue){
+        if (cellState === "unselected" && cellTable === "opponent") {
+          $(this).css("background-color", "lightyellow");  // if not selected change color back
         }
-      });  // end of revert color if not clicked
+      }
+    });  // end of revert color if not clicked
 
-      // select to take a shot
-      $("td").click(function(){
+    // select to take a shot
+    $("td").click(function(){
+      // if (controllerIsTrue){
         var cellId = $(this).data("id"); // get the cellId for the current cell
         var cellState = $(this).data("state");
         var cellTable = $(this).closest("table").attr("class");
-
-        if (isTrue){
-
-          if (cellId !== 'header' && cellState === "unselected" && cellTable === "opponent") {
-            $(this).css("background-color", "blue"); // add the hit/miss animation here?
-            $(this).data("state", "miss");
-            if (selectedArr.indexOf(cellId) === -1) { // prevent duplicates in the selectedArr
-              selectedArr.push(cellId); // push the selected cell into the selectedArr
-              var shotObj = {};
-              shotObj.player = $('#personsName').val(); //person;
-              shotObj.id = cellId;
-              //console.log('\nshotObj (player name - cell ID)' , shotObj);
-              socket.emit('shot', shotObj);
-            } // END of (selectedArr.indexOf(cellId) === -1)
-          } // END of (cellId !== 'header' && cellState === "unselected" && cellTable === "opponent")
-        }
-
-      });  // end of select to take a shot
-
+        if (cellId !== 'header' && cellState === "unselected" && cellTable === "opponent") {
+          $(this).css("background-color", "blue"); // add the hit/miss animation here?
+          $(this).data("state", "miss");
+          if (selectedArr.indexOf(cellId) === -1) { // prevent duplicates in the selectedArr
+            selectedArr.push(cellId); // push the selected cell into the selectedArr
+            var shotObj = {};
+            shotObj.player = $('#personsName').val(); //person;
+            shotObj.id = cellId;
+            //console.log('\nshotObj (player name - cell ID)' , shotObj);
+            socket.emit('shot', shotObj);
+          } // END of (selectedArr.indexOf(cellId) === -1)
+        } // END of (cellId !== 'header' && cellState === "unselected" && cellTable === "opponent")
+      // }
+    });  // end of select to take a shot
+    
     // update the ship board with other players shots
     socket.on('shot', function(shotObj){
 
@@ -589,15 +594,22 @@ console.log("new theShipStyle", theShipStyle);
     'click': function() {
       if (shipsPlaced()) {
         event.preventDefault();
-        $('#shotPlayer').text("Game ON!");
-
-        $("#readyToPlay").css("display","none");  
-        $('h4').text(''); 
 
         // disable droppable
+        $('#shotPlayer').text("Game ON (standby...)!");
         gameReady(true);
-
         // emit to server player is ready
+        $("#readyToPlay").css("display","none");  // this is the ready to play button
+        $('h4').text(''); // this is the dragging instructions going blank 
+
+        // this needs a check to see who the current player is and
+
+        if (gameObj.gameStarted) {
+          $('#shotPlayer').text("Game starts NOW!");
+          $( "#userName" ).text("");
+          console.log(gameObj);
+          console.log("game starts here!");
+        }
       } else {
         // prompt the user to place their ships on the grid
         $('#shotPlayer').text("Place your ships on the grid.");
